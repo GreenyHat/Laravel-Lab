@@ -12046,3 +12046,13 @@ textarea.form-control-lg {
   --bs-tooltip-bg: var(--bs-tertiary-bg);
   --bs-tooltip-color: var(--bs-emphasis-color);
 }
+.navbar img{
+    width:1.2rem ;
+}
+
+.welcome {
+    background: url('/img/background.jpg');
+    background-position: center center;
+    background-size: cover;
+}
+
