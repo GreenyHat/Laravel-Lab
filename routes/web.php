@@ -34,6 +34,7 @@ Route::put('/contacts/{contact}/', [ContactController::class, 'update'])->name('
 //esto es para seguir la logica de Ruta/Controlador/Funcion 
 //en este caso localhost:port/contacts/create
 Route::post('/contacts/', [ContactController::class, 'store'])->name('contacts.store');
+Route::delete('/contacts/{contact}/', [ContactController::class, 'destroy'])->name('contacts.destroy');
 
 // Route::get('contact', fn () => Response::view('contact'));
 
