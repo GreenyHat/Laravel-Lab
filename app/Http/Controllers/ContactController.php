@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Contact;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
 
 class ContactController extends Controller
 {
@@ -25,7 +27,7 @@ class ContactController extends Controller
     public function create()
     {
         return view('contact'); //esto es para seguir la logica de Ruta/Controlador/Funcion
-                               //en este caso localhost:port/contacts/create
+        //en este caso localhost:port/contacts/create
     }
 
     /**
@@ -37,7 +39,20 @@ class ContactController extends Controller
     public function store(Request $request)
     {
         //Esto no hay que hacerlo asi es solo para testear que funciona, ahora mismo cualquiera puede crear un contacto, aunque no este logeado
-        Contact::create($request->all());
+        // Contact::create($request->all());
+
+        // if (is_null($request->get('name'))) {
+        //     return Response::redirectTo()->back()->withErrors([//Tambien seria valido usar el helper return back ()->whithError([]);
+        //         'name'=>'This field is required',
+        //     ]);
+        // }
+        $request->validate([
+            'name' => 'required',
+            'phone_number' => 'required|digits:9',
+            'email' => 'required|email',
+            'age' => 'required| numeric|min:1|max:255', //el max es 255 porque hemos puesto que como max adminta 1B
+        ]);
+
         return response('Contact created');
     }
 

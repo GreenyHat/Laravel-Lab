@@ -32,7 +32,6 @@ Route::get('/contacts/create', [ContactController::class, 'create']);
 //en este caso localhost:port/contacts/create
 Route::post('/contacts/', [ContactController::class, 'store'])->name('contacts.store');
 
-
 // Route::get('contact', fn () => Response::view('contact'));
 
 // Route::post('/contact', function (Request $request) {

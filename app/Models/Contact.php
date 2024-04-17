@@ -10,6 +10,8 @@ class Contact extends Model
     use HasFactory;
     protected $fillable = [
         "name",
-        "phone_number"
+        "phone_number",
+        "email",
+        "age",
     ];//Aqui ponemos lo que es rellenable en la base de datos, los datos que no esten aqui no seran trasladados a la bbdd
 }
