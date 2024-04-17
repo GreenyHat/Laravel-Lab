@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\HomeController;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,9 +26,9 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-Route::get('/contacts/create', [ContactController::class, 'create']);
+Route::get('/contacts/create', [ContactController::class, 'create'])->name('contacts.create');
 //esto es para seguir la logica de Ruta/Controlador/Funcion 
 //en este caso localhost:port/contacts/create
 Route::post('/contacts/', [ContactController::class, 'store'])->name('contacts.store');

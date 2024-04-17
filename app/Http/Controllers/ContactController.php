@@ -46,14 +46,15 @@ class ContactController extends Controller
         //         'name'=>'This field is required',
         //     ]);
         // }
-        $request->validate([
+        $data = $request->validate([
             'name' => 'required',
             'phone_number' => 'required|digits:9',
             'email' => 'required|email',
             'age' => 'required| numeric|min:1|max:255', //el max es 255 porque hemos puesto que como max adminta 1B
         ]);
+        Contact::create($data);
 
-        return response('Contact created');
+        return redirect()->route('home');
     }
 
     /**
