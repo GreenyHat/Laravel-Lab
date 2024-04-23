@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreContactRequest;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -40,7 +41,7 @@ class ContactController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreContactRequest $request)
     {
         //Esto no hay que hacerlo asi es solo para testear que funciona, ahora mismo cualquiera puede crear un contacto, aunque no este logeado
         // Contact::create($request->all());
@@ -50,14 +51,19 @@ class ContactController extends Controller
         //         'name'=>'This field is required',
         //     ]);
         // }
-        $data = $request->validate([
-            'name' => 'required',
-            'phone_number' => 'required|digits:9',
-            'email' => 'required|email',
-            'age' => 'required| numeric|min:1|max:255', //el max es 255 porque hemos puesto que como max adminta 1B
-        ]);
 
-        auth()->user()->contacts()->create($data);
+
+        auth()->user()->contacts()->create($request->validated());
+
+
+        // $data = $request->validate([
+        //     'name' => 'required',
+        //     'phone_number' => 'required|digits:9',
+        //     'email' => 'required|email',
+        //     'age' => 'required| numeric|min:1|max:255', //el max es 255 porque hemos puesto que como max adminta 1B
+        // ]);
+
+        // auth()->user()->contacts()->create($data);
 
         return redirect()->route('home');
     }
@@ -83,7 +89,7 @@ class ContactController extends Controller
      */
     public function edit(Contact $contact)
     {
-        $this->authorize('update', $contact);// OJO AQUI, QUE NO ES EDIT ES UPDATE, YA QUE REALMENTE ESTAS ACTUALIZANDO EN LA BBDD
+        $this->authorize('update', $contact); // OJO AQUI, QUE NO ES EDIT ES UPDATE, YA QUE REALMENTE ESTAS ACTUALIZANDO EN LA BBDD
 
         return view('contacts.edit', compact('contact'));
     }
@@ -99,14 +105,8 @@ class ContactController extends Controller
     {
         $this->authorize('update', $contact);
 
-        $data = $request->validate([
-            'name' => 'required',
-            'phone_number' => 'required|digits:9',
-            'email' => 'required|email',
-            'age' => 'required| numeric|min:1|max:255', //el max es 255 porque hemos puesto que como max adminta 1B
-        ]);
-
-        $contact->update($data);
+        $contact->update($request->validated());
+        
         return redirect()->route('home');
     }
 
