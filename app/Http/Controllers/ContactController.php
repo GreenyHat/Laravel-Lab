@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Contact;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Gate;
 
 class ContactController extends Controller
 {
@@ -16,7 +15,12 @@ class ContactController extends Controller
      */
     public function index()
     {
-        //
+        // return view('contacts.index', ['contacts' => Contact::all()]); Esto da todos los contactos 
+        //a todos los usuarios asi que no nos sirve
+        //Llamo a la vista que acabo de crear en views/contacts desde el controlador
+        $contacts = auth()->user()->contacts;
+
+        return view('contacts.index', compact('contacts'));
     }
 
     /**
@@ -52,7 +56,8 @@ class ContactController extends Controller
             'email' => 'required|email',
             'age' => 'required| numeric|min:1|max:255', //el max es 255 porque hemos puesto que como max adminta 1B
         ]);
-        Contact::create($data);
+
+        auth()->user()->contacts()->create($data);
 
         return redirect()->route('home');
     }
@@ -65,7 +70,9 @@ class ContactController extends Controller
      */
     public function show(Contact $contact)
     {
-        //
+        $this->authorize('view', $contact);
+
+        return view('contacts.show', compact('contact'));
     }
 
     /**
@@ -76,6 +83,8 @@ class ContactController extends Controller
      */
     public function edit(Contact $contact)
     {
+        $this->authorize('update', $contact);// OJO AQUI, QUE NO ES EDIT ES UPDATE, YA QUE REALMENTE ESTAS ACTUALIZANDO EN LA BBDD
+
         return view('contacts.edit', compact('contact'));
     }
 
@@ -88,6 +97,8 @@ class ContactController extends Controller
      */
     public function update(Request $request, Contact $contact)
     {
+        $this->authorize('update', $contact);
+
         $data = $request->validate([
             'name' => 'required',
             'phone_number' => 'required|digits:9',
@@ -107,6 +118,8 @@ class ContactController extends Controller
      */
     public function destroy(Contact $contact)
     {
+        $this->authorize('delete', $contact);
+        //IMPORTANTE EL ORDEN DE LAS ORDENES, TIENE QUE ESTAS AUTORIZADO ANTES DE PODER ACCEDER AL COMANDO DE BORRADO
         $contact->delete();
         return redirect()->route('home');
     }

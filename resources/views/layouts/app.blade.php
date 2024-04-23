@@ -46,7 +46,7 @@
           <!-- Right Side Of Navbar -->
           <ul class="navbar-nav ms-auto">
             <!-- Authentication Links -->
-            @guest
+            @guest <!--SI NO ESTAS REGISTRADO-->
               @if (Route::has('login'))
                 <li class="nav-item">
                   <a class="nav-link"
@@ -61,6 +61,16 @@
                 </li>
               @endif
             @else
+              <!--SI ESTAS REGISTRADO-->
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('contacts.index') }}">My
+                  Contacts</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('contacts.create') }}">Create
+                  New Contact</a>
+              </li>
+
               <li class="nav-item dropdown">
                 <a id="navbarDropdown" class="nav-link dropdown-toggle"
                   href="#" role="button" data-bs-toggle="dropdown"
@@ -71,8 +81,8 @@
                 <div class="dropdown-menu dropdown-menu-end"
                   aria-labelledby="navbarDropdown">
                   <a class="dropdown-item" href="{{ route('logout') }}"
-                    onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    
                     {{ __('Logout') }}
                   </a>
 
