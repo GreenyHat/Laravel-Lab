@@ -53,8 +53,6 @@ class ContactController extends Controller
         // }
 
 
-        auth()->user()->contacts()->create($request->validated());
-
 
         // $data = $request->validate([
         //     'name' => 'required',
@@ -63,9 +61,19 @@ class ContactController extends Controller
         //     'age' => 'required| numeric|min:1|max:255', //el max es 255 porque hemos puesto que como max adminta 1B
         // ]);
 
-        // auth()->user()->contacts()->create($data);
 
-        return redirect()->route('home');
+
+
+        // auth()->user()->contacts()->create($request->validated());
+
+        // return redirect()->route('home');
+
+        $contact = auth()->user()->contacts()->create($request->validated());
+
+        return redirect('home')->with('alert', [
+            'message' => "Contact $contact->name successfully saved",
+            'type' => 'success',
+        ]);
     }
 
     /**
@@ -106,8 +114,11 @@ class ContactController extends Controller
         $this->authorize('update', $contact);
 
         $contact->update($request->validated());
-        
-        return redirect()->route('home');
+
+        return redirect('home')->with('alert', [
+            'message' => "Contact $contact->name successfully updated",
+            'type' => 'success',
+        ]);
     }
 
     /**
@@ -121,6 +132,11 @@ class ContactController extends Controller
         $this->authorize('delete', $contact);
         //IMPORTANTE EL ORDEN DE LAS ORDENES, TIENE QUE ESTAS AUTORIZADO ANTES DE PODER ACCEDER AL COMANDO DE BORRADO
         $contact->delete();
-        return redirect()->route('home');
+        // return redirect()->route('home');
+
+        return redirect('home')->with('alert', [
+            'message' => "Contact $contact->name successfully deleted",
+            'type' => 'success',
+        ]);
     }
 }
