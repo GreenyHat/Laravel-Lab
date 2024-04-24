@@ -14,5 +14,6 @@ class Contact extends Model
         "email",
         "user_id",
         "age",
+        "profile_picture",
     ];//Aqui ponemos lo que es rellenable en la base de datos, los datos que no esten aqui no seran trasladados a la bbdd
 }

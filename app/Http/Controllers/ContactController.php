@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreContactRequest;
 use App\Models\Contact;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
+
+
 
 class ContactController extends Controller
 {
@@ -68,8 +69,14 @@ class ContactController extends Controller
 
         // return redirect()->route('home');
 
-        $contact = auth()->user()->contacts()->create($request->validated());
+        $data = $request->validated();
 
+        if ($request->hasFile('profile_picture')) {
+            $path = $request->file('profile_picture')->store('profiles', 'public');
+            $data['profile_picture'] = $path;
+        }
+
+        $contact = auth()->user()->contacts()->create($data);
         return redirect('home')->with('alert', [
             'message' => "Contact $contact->name successfully saved",
             'type' => 'success',
@@ -113,13 +120,28 @@ class ContactController extends Controller
     {
         $this->authorize('update', $contact);
 
-        $contact->update($request->validated());
+        // Validar los datos del formulario
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            // Define otras reglas de validación para tus campos aquí
+        ]);
 
+        // Procesar el archivo de imagen si se ha proporcionado
+        if ($request->hasFile('profile_picture')) {
+            $path = $request->file('profile_picture')->store('profiles', 'public');
+            $validatedData['profile_picture'] = $path;
+        }
+
+        // Actualizar el contacto con los datos validados
+        $contact->update($validatedData);
+
+        // Redirigir con un mensaje de alerta
         return redirect('home')->with('alert', [
             'message' => "Contact $contact->name successfully updated",
             'type' => 'success',
         ]);
     }
+
 
     /**
      * Remove the specified resource from storage.

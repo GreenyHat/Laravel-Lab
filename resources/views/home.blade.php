@@ -6,6 +6,12 @@
       @forelse ($contacts as $contact)
         <div class="col-md-4 mb-3">
           <div class="card text-center">
+            <div class="d-flex justify-content-center mb-2">
+              <a href="{{ route('contacts.show', $contact->id) }}">
+                <img class="profile-picture"
+                  src="{{ Storage::url($contact->profile_picture) }}">
+              </a>
+            </div>
             <a class="text-decoration-none text-white"
               href="{{ route('contacts.show', $contact->id) }}">
               <div class="card-body">

@@ -28,6 +28,7 @@ class StoreContactRequest extends FormRequest
             'email' => 'required|email',
             'phone_number' => 'required|digits:9',
             'age' => 'required|numeric|min:1|max:255',//el max es 255 porque hemos puesto que como max adminta 1B
+            'profile_picture'=>'image|nullable',
         ];
     }
 }
