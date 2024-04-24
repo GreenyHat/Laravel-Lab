@@ -20,7 +20,11 @@ class ContactController extends Controller
         // return view('contacts.index', ['contacts' => Contact::all()]); Esto da todos los contactos 
         //a todos los usuarios asi que no nos sirve
         //Llamo a la vista que acabo de crear en views/contacts desde el controlador
-        $contacts = auth()->user()->contacts;
+        $contacts = auth()
+            ->user()
+            ->contacts()
+            ->orderBy('name', 'asc')
+            ->paginate(6); //para poner paginas de 6 en 6
 
         return view('contacts.index', compact('contacts'));
     }
