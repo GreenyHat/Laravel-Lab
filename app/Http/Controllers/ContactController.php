@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreContactRequest;
 use App\Models\Contact;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 
 
@@ -81,6 +82,8 @@ class ContactController extends Controller
         }
 
         $contact = auth()->user()->contacts()->create($data);
+
+        Cache::forget(auth()->id());
         return redirect('home')->with('alert', [
             'message' => "Contact $contact->name successfully saved",
             'type' => 'success',
@@ -139,6 +142,8 @@ class ContactController extends Controller
         // Actualizar el contacto con los datos validados
         $contact->update($validatedData);
 
+        Cache::forget(auth()->id());
+
         // Redirigir con un mensaje de alerta
         return redirect('home')->with('alert', [
             'message' => "Contact $contact->name successfully updated",
@@ -159,6 +164,7 @@ class ContactController extends Controller
         //IMPORTANTE EL ORDEN DE LAS ORDENES, TIENE QUE ESTAS AUTORIZADO ANTES DE PODER ACCEDER AL COMANDO DE BORRADO
         $contact->delete();
         // return redirect()->route('home');
+        Cache::forget(auth()->id());
 
         return back()->with('alert', [
             'message' => "Contact $contact->name successfully deleted",
