@@ -63,12 +63,13 @@
             @else
               <!--SI ESTAS REGISTRADO-->
               <li class="nav-item">
-                <a class="nav-link" href="{{ route('contacts.index') }}">My
-                  Contacts</a>
+                <a class="nav-link" href="{{ route('contact-share.create') }}">Share Contact</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{{ route('contacts.create') }}">Create
-                  New Contact</a>
+                <a class="nav-link" href="{{ route('contacts.index') }}">My Contacts</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('contacts.create') }}">Create New Contact</a>
               </li>
 
               <li class="nav-item dropdown">

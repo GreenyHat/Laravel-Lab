@@ -16,4 +16,12 @@ class Contact extends Model
         "age",
         "profile_picture",
     ];//Aqui ponemos lo que es rellenable en la base de datos, los datos que no esten aqui no seran trasladados a la bbdd
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
+    public function sharedWithUsers() {
+        return $this->belongsToMany(User::class, 'contact_shares');
+    }
 }
