@@ -1,9 +1,14 @@
 <?php
 
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ContactShareController;
+use App\Http\Controllers\ContactsShareController;
 use App\Http\Controllers\HomeController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\StripeController;
+use App\Http\Controllers\TokenController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,14 +21,46 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+
 Route::get('/', fn () => auth()->check() ? redirect('/home') : view('welcome'));
 
 Auth::routes();
 
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/checkout', [StripeController::class, 'checkout'])->name('checkout');
+Route::get('/billing-portal', [StripeController::class, 'billingPortal'])->name('billing-portal');
+Route::get('/free-trial-end', [StripeController::class, 'freeTrialEnd'])->name('free-trial-end');
+
+Route::middleware(['auth', 'subscription'])->group(function () {
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::resource('contacts', ContactController::class);
+    Route::resource('contact-share', ContactShareController::class)->except(['show', 'edit', 'update']);
+    Route::resource('tokens', TokenController::class)->only(['create', 'store']);
+});
 
 
-Route::resource('contacts', ContactController::class);
+
+
+
+// Route::get('/', fn () => auth()->check() ? redirect('/home') : view('welcome'));
+
+// Auth::routes();
+
+// Route::get('/checkout', function (Request $request) {
+//     return $request->user()
+//         ->newSubscription('default', config('stripe.price_id'))//esto accede a la carpeta config donde se almacenan las variables de entorno que devuelven arrays con ciertas configuraciones 
+//         ->checkout();
+// })->name('checkout');
+
+// Route::get('/billing-portal', function (Request $request) {
+//     return $request->user()->redirectToBillingPortal();
+// });
+
+// Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+
+// Route::middleware('auth')->resource('contacts', ContactController::class);
+
 
 //TODAS ESTAS RUTAS TE LAS PUEDES AHORRAR CON EL COMANDO DE ARRIBA
 // Route::get('/contacts/create', [ContactController::class, 'create'])->name('contacts.create');
