@@ -1,4 +1,9 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+### **Recursos Adicionales:**
+
+- [Documentación Oficial de Laravel](https://laravel.com/docs)
+- [Laracasts](https://laracasts.com/) (Plataforma de aprendizaje con tutoriales en vídeo sobre Laravel y otros temas relacionados con el desarrollo web.)
+- [Api de Laravel](https://laravel.com/api/8.x/index.html)
+- [DevsProdigy (estructura controladores Laravel)](https://devsprodigy.es/blogs/controladores-en-laravel-estructura-funcionalidades-y-buenas-practicas)
 
 ### **Sintaxis Principal de Laravel y PHP:**
 
@@ -8,7 +13,7 @@
 - **`@foreach`**: Se utiliza en las vistas de Blade de Laravel para iterar sobre una colección.
 - **`@empty`**: Se utiliza en las vistas de Blade de Laravel para verificar si una colección está vacía.
 - **`@csrf`**: Se utiliza en los formularios de Laravel para agregar un token CSRF que ayuda a proteger contra ataques de falsificación de solicitudes entre sitios.
-- **`@method`**: Se utiliza en los formularios de Laravel para especificar un método HTTP que no sea GET o POST (por ejemplo, DELETE o PUT).
+- **`@method`**: Se utiliza en los formularios de Laravel para especificar un método HTTP que no sea GET ni POST (por ejemplo, DELETE o PUT).
 
 ## **Tutorial para Empezar con el Proyecto de Almacenamiento de Contactos en Laravel**
 
@@ -215,12 +220,6 @@
 
 - Laravel ofrece migraciones para gestionar la estructura de la base de datos de manera programática y portátil.
 - Las semillas se utilizan para poblar la base de datos con datos de prueba.
-
-### **Recursos Adicionales:**
-
-- [Documentación Oficial de Laravel](https://laravel.com/docs)
-- [Laracasts](https://laracasts.com/) (Plataforma de aprendizaje con tutoriales en vídeo sobre Laravel y otros temas relacionados con el desarrollo web.)
-- [Api de Laravel](https://laravel.com/api/8.x/index.html)
 
 ### **Estructura del Código y Relaciones**
 
@@ -1152,3 +1151,202 @@ Mas detalles sobre los componentes del commit
 Estos cambios mejoran la funcionalidad de compartir contactos en la aplicación, implementando la lógica necesaria para compartir y dejar de compartir contactos de manera segura y eficiente.
 
 ## Correos automatizados y caché
+
+Se realizaron una serie de cambios para integrar la funcionalidad de envío de correos electrónicos utilizando Mailtrap en el proyecto. Aquí está el tutorial paso a paso basado en esos cambios:
+
+### **Tutorial: Integración de Mailtrap para el envío de correos electrónicos en Laravel**
+
+### **1. Configuración de Mailtrap en Laravel:**
+
+- Mailtrap proporciona un entorno de desarrollo para pruebas de correo electrónico. Regístrate en [Mailtrap](https://mailtrap.io/) y obtén las credenciales SMTP.
+- Abre el archivo **`.env`** en tu proyecto Laravel y configura las credenciales SMTP proporcionadas por Mailtrap:
+    
+    ```makefile
+    makefileCopy code
+    MAIL_MAILER=smtp
+    MAIL_HOST=smtp.mailtrap.io
+    MAIL_PORT=2525
+    MAIL_USERNAME=your-mailtrap-username
+    MAIL_PASSWORD=your-mailtrap-password
+    MAIL_ENCRYPTION=tls
+    ```
+    
+
+### **2. Creación de una Mailable:**
+
+- Laravel utiliza Mailables para representar los correos electrónicos enviados por la aplicación. Crea una nueva Mailable utilizando el comando artisan:
+    
+    ```go
+    goCopy code
+    php artisan make:mail SampleMail
+    ```
+    
+- Este comando generará un nuevo archivo **`SampleMail.php`** en el directorio **`App\Mail`**.
+
+### **3. Personalización de la Mailable:**
+
+- Abre el archivo **`SampleMail.php`** y personaliza el método **`build()`** para definir la estructura y el contenido del correo electrónico:
+    
+    ```php
+    phpCopy code
+    public function build()
+    {
+        return $this->view('emails.sample');
+    }
+    ```
+    
+- Crea una vista para el correo electrónico en el directorio **`resources/views/emails/sample.blade.php`** y personalízala según sea necesario.
+
+### **4. Implementación en Controlador:**
+
+- Abre el controlador donde deseas enviar el correo electrónico. Por ejemplo, **`SampleController.php`**.
+- Importa la Mailable que acabas de crear al inicio del archivo:
+    
+    ```php
+    phpCopy code
+    use App\Mail\SampleMail;
+    ```
+    
+- Dentro del método correspondiente, llama a la Mailable y envía el correo electrónico:
+    
+    ```php
+    phpCopy code
+    use Illuminate\Support\Facades\Mail;
+    use App\Mail\SampleMail;
+    
+    public function sendEmail()
+    {
+        $userEmail = 'recipient@example.com';
+        Mail::to($userEmail)->send(new SampleMail());
+    }
+    
+    ```
+    
+
+### **5. Prueba en Mailtrap:**
+
+- Ejecuta la aplicación Laravel y llama al método que envía el correo electrónico desde tu controlador.
+- Ve a tu bandeja de entrada en Mailtrap para verificar si el correo electrónico se ha enviado correctamente y verifica el contenido y el formato del correo electrónico.
+
+### **6. Verificación de la Configuración:**
+
+- Asegúrate de que el correo electrónico se envía correctamente y de que el formato y el contenido son los esperados.
+- Si encuentras algún problema, verifica las credenciales SMTP y la configuración en el archivo **`.env`**.
+
+Siguiendo estos pasos, habrás integrado con éxito Mailtrap en tu aplicación Laravel para enviar correos electrónicos de prueba. Este proceso mejora el desarrollo y la depuración del envío de correos electrónicos al proporcionar un entorno de pruebas seguro y controlado.
+
+## Database Seeding (Fundamental para el trabajo en equipo)
+
+ `php artisan make:factory ContactFactory --model=Contact` 
+
+metodo artisan `migrate:fresh` te revienta la base de datos y te la recrea
+
+`php artisan db:seed`    `php artisan migrate:fresh --seed` (para hacer ambos en una linea)
+
+En el commit [IMPORTANT] se realizaron una serie de tareas relacionadas con la creación y población de la base de datos para el proyecto. Aquí está el análisis y la explicación de cada parte del código:
+
+1. **Creación de un Factory para Contacto:**
+    - Se utiliza el comando artisan **`make:factory`** para generar un factory llamado **`ContactFactory`** asociado al modelo **`Contact`**. Esto facilita la creación de datos de prueba para la tabla de contactos.
+2. **Migración y Semilla de la Base de Datos:**
+    - El método **`migrate:fresh`** revienta la base de datos y la recrea desde cero, eliminando todos los datos existentes.
+    - **`db:seed`** se utiliza para poblar la base de datos con datos de prueba utilizando los seeders definidos en la aplicación.
+3. **Creación del Usuario de Prueba:**
+    - Se crea un usuario de prueba con la dirección de correo electrónico **`test@test.com`**.
+4. **La “magia” del método `hasContacts()`:**
+    - El método **`hasContacts(5)`** se utiliza dentro del factory de usuarios para indicar que cada usuario creado tendrá asociados aleatoriamente entre 1 y 5 contactos.
+    - Esto se logra de manera automática gracias a la funcionalidad proporcionada por Laravel y se considera "mágico" porque Laravel maneja la generación de datos de manera inteligente y aleatoria.
+5. **Seeder para la Base de Datos:**
+    - En la clase **`DatabaseSeeder`**, el método **`run()`** se encarga de sembrar la base de datos con datos de prueba.
+    - Se crea un usuario de prueba con la dirección de correo electrónico **`test@test.com`**.
+    - Se crean 5 usuarios adicionales, cada uno con entre 1 y 5 contactos generados automáticamente.
+    - Se establece que el primer contacto de cada usuario sea compartido con el usuario de prueba creado anteriormente.
+    - Finalmente, se comparten todos los contactos de los usuarios con el usuario de prueba.
+
+En resumen, este código se encarga de configurar la base de datos con datos de prueba para facilitar el desarrollo y las pruebas del proyecto. Se utilizan factories y seeders de Laravel para generar datos aleatorios y sembrar la base de datos de manera eficiente. La "magia" del método **`hasContacts()`** permite la creación de usuarios con un número variable de contactos asociados de manera automática.
+
+### Importante: desglose de la sintaxis del seeder
+
+```php
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\User;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+
+class DatabaseSeeder extends Seeder
+{
+    /**
+     * Seed the application's database.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $testUSer = User::factory()->hasContacts()->createOne(['email' => 'test@test.com']);
+        $users = User::factory(5)->hasContacts(5)->create()->each(
+            fn ($user) => $user->contacts->first()->sharedWithUsers()->attach($testUSer->id)
+        );
+        $testUSer->contacts->first()->sharedWithUSers()->attach($users->pluck('id'));
+    }
+}
+```
+
+En el seeder **`DatabaseSeeder`**, se realiza lo siguiente:
+
+1. Se crea un usuario de prueba con la dirección de correo electrónico **`test@test.com`**, utilizando el factory de usuarios (**`User::factory()->hasContacts()->createOne()`**).
+2. Se crean 5 usuarios adicionales con entre 1 y 5 contactos cada uno, utilizando el factory de usuarios (**`User::factory(5)->hasContacts(5)->create()`**).
+3. Por cada usuario creado en el paso anterior, se toma el primer contacto de su lista de contactos y se comparte con el usuario de prueba creado anteriormente. Esto se hace usando el método **`each`** para iterar sobre cada usuario y utilizando una función anónima para realizar la lógica de compartir el contacto.
+4. Finalmente, se comparten todos los contactos de los usuarios creados en el paso 2 con el usuario de prueba. Esto se logra utilizando el método **`attach`** en la relación **`sharedWithUsers()`** del primer contacto del usuario de prueba, y se le pasa como argumento un array con los IDs de los usuarios creados en el paso 2.
+
+En resumen, este seeder crea un usuario de prueba y otros 5 usuarios con contactos asociados, compartiendo el primer contacto de cada usuario con el usuario de prueba y compartiendo todos los contactos de los usuarios con el usuario de prueba. Esto permite simular un escenario donde el usuario de prueba tiene acceso a los contactos de otros usuarios en la aplicación.
+
+## API Tokens
+
+Los servidores se autentican usualmente con tokens, a diferencia de las metodologias usuales en frontend como contrasenas y usuarios. Teniendo esto en cuenta: se han agregado API tokens a la aplicación Laravel. Esta característica permite autenticar usuarios y aplicaciones de terceros mediante tokens de API, lo que facilita la integración con servicios externos o el desarrollo de aplicaciones cliente.
+
+## Estructura de archivos
+
+1. **app**: Esta carpeta contiene la lógica principal de la aplicación. Incluye subcarpetas y archivos como:
+    - **Console**: Contiene comandos de Artisan personalizados.
+    - **Exceptions**: Maneja las excepciones de la aplicación.
+    - **Http**: Aquí se encuentran los controladores, middleware y las solicitudes de la aplicación.
+    - **Models**: Define los modelos de Eloquent que representan las tablas de la base de datos.
+    - **Providers**: Contiene clases de proveedores de servicios que registran servicios de la aplicación.
+    - **View/Components**: Esta carpeta contiene componentes de Blade reutilizables que encapsulan fragmentos de interfaz de usuario y lógica de presentación. Los componentes de Blade son similares a las vistas parciales, pero tienen la ventaja de ser reutilizables en múltiples vistas. Estos componentes pueden incluirse en otras vistas mediante una sintaxis simple y limpia, lo que fomenta la modularidad y la legibilidad del código.
+        
+        Dentro de esta carpeta, encontrarás archivos PHP que definen los componentes de Blade, cada uno de los cuales puede tener su propio archivo de Blade para la plantilla HTML correspondiente. Estos componentes pueden aceptar parámetros y utilizar lógica PHP para personalizar su comportamiento y su apariencia.
+        
+    
+    El uso de componentes de Blade en Laravel promueve la reutilización de código y la separación de preocupaciones, lo que facilita la construcción y el mantenimiento de interfaces de usuario coherentes y escalables.
+    
+2. **bootstrap**: Contiene archivos de inicio de la aplicación y el cargador automático de Composer.
+3. **config**: Almacena archivos de configuración de la aplicación, como variables de entorno, configuraciones de base de datos y servicios.
+4. **database**: Aquí se encuentran los archivos relacionados con la base de datos:
+    - **factories**: Define factories para generar datos falsos durante las pruebas o la inicialización de la base de datos.
+    - **migrations**: Contiene archivos de migración para crear y modificar la estructura de la base de datos.
+    - **seeders**: Define seeders para poblar la base de datos con datos falsos.
+5. **public**: Es la carpeta raíz del servidor web. Contiene archivos accesibles públicamente, como imágenes, hojas de estilo y scripts JavaScript.
+6. **resources**: Contiene recursos de la aplicación, como vistas, archivos de lenguaje, estilos CSS y scripts JavaScript. Se organiza en subcarpetas como:
+    - **js**: Archivos JavaScript de la aplicación.
+    - **lang**: Archivos de traducción de la aplicación.
+    - **sass**: Archivos Sass para estilos CSS.
+    - **views**: Vistas Blade que componen la interfaz de usuario de la aplicación.
+7. **routes**: Define las rutas de la aplicación, determinando cómo se manejan las solicitudes HTTP. Incluye archivos como:
+    - **api.php**: Define rutas para la API de la aplicación.
+    - **web.php**: Define rutas web para la aplicación.
+8. **storage**: Almacena archivos generados por la aplicación, como logs, archivos cargados por los usuarios y sesiones de la aplicación. Se organiza en subcarpetas como:
+    - **app**: Archivos específicos de la aplicación.
+    - **framework**: Archivos generados por el framework.
+    - **logs**: Archivos de registros de la aplicación.
+9. **tests**: Contiene pruebas automatizadas para la aplicación, escritas utilizando el framework de pruebas integrado de Laravel.
+10. **vendor**: Es la carpeta donde se instalan las dependencias de Composer, incluyendo todas las bibliotecas y paquetes utilizados en la aplicación.
+11. **.env**: Archivo de entorno que contiene variables de configuración sensibles, como credenciales de base de datos y claves de API.
+12. **.gitignore**: Archivo que especifica los archivos y carpetas que se deben ignorar en los commits de Git.
+13. **artisan**: Script de consola para ejecutar comandos de Artisan.
+14. **composer.json**: Archivo de configuración de Composer, que especifica las dependencias del proyecto y otras configuraciones.
+15. **package.json**: Archivo de configuración de npm, utilizado para administrar las dependencias de JavaScript.
+16. **webpack.mix.js**: Configuración de Laravel Mix, que simplifica la compilación y gestión de activos.
+17. **phpunit.xml**: Configuración de PHPUnit para las pruebas automatizadas.
+18. **README.md**: Archivo de instrucciones y descripción general del proyecto.
