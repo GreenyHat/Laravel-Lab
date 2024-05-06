@@ -295,6 +295,172 @@
     
     ```
     
+    ## Creación de modulos y controladores
+    
+    Crear módulos y controladores en Laravel es una práctica común para organizar y estructurar tu aplicación de manera modular. Aquí tienes una guía paso a paso para hacerlo con Artisan, la herramienta de línea de comandos de Laravel:
+    
+    ### **Paso 1: Crear un Módulo**
+    
+    1. **Crear un Directorio para el Módulo**: Decide dónde deseas ubicar tu módulo dentro del directorio **`app`** de tu aplicación Laravel. Puedes optar por colocarlo directamente en la carpeta **`app`** o crear una subcarpeta específica para los módulos.
+    2. **Ejecutar el Comando de Artisan**: Abre tu terminal y ejecuta el siguiente comando de Artisan para crear un nuevo módulo:
+    
+    ```bash
+    bashCopy code
+    php artisan make:module NombreDelModulo
+    
+    ```
+    
+    1. **Estructura de Directorios Generada**: Artisan generará automáticamente la estructura de directorios para tu módulo en la ubicación especificada. Esto incluirá una carpeta para controladores, modelos, vistas, rutas, etc.
+    
+    ### **Paso 2: Crear un Controlador en el Módulo**
+    
+    1. **Ejecutar el Comando de Artisan**: Abre tu terminal y ejecuta el siguiente comando de Artisan para crear un nuevo controlador dentro del módulo:
+    
+    ```bash
+    bashCopy code
+    php artisan make:controller NombreDelModulo/NombreDelControlador
+    
+    ```
+    
+    1. **Controlador Creado**: Artisan creará un nuevo archivo de controlador dentro de la carpeta de controladores del módulo. Este controlador estará listo para su uso y puede contener métodos para manejar las solicitudes HTTP relacionadas con el módulo.
+    
+    ### **Paso 3: Utilizar el Controlador en las Rutas**
+    
+    1. **Definir las Rutas**: Abre el archivo de rutas de tu módulo (**`routes.php`** o similar) y define las rutas que apunten a los métodos del controlador recién creado.
+    
+    ```php
+    phpCopy code
+    use App\Modules\NombreDelModulo\Controllers\NombreDelControlador;
+    
+    Route::get('/ruta', [NombreDelControlador::class, 'metodo']);
+    
+    ```
+    
+    1. **Acceder a las Rutas**: Ahora puedes acceder a las rutas definidas en tu módulo a través de sus URL correspondientes en tu aplicación Laravel.
+    
+    ### **Notas Adicionales:**
+    
+    - Puedes repetir estos pasos para crear tantos módulos y controladores como necesites en tu aplicación Laravel.
+    - Asegúrate de seguir las convenciones de nomenclatura de Laravel para los nombres de los módulos, controladores y métodos.
+    - Puedes personalizar la estructura de directorios de tu módulo según tus necesidades específicas utilizando el comando **`php artisan vendor:publish --tag=laravel-modules`**.
+    
+    Con estos pasos, deberías poder crear fácilmente módulos y controladores en tu aplicación Laravel utilizando Artisan.
+    
+    ### Ejemplo
+    
+    ### **Paso 1: Crear un Módulo**
+    
+    1. **Crear el Módulo con Artisan**:
+    
+    ```bash
+    bashCopy code
+    php artisan make:module Blog
+    ```
+    
+    Esto creará la estructura de directorios para el módulo **`Blog`** dentro de la carpeta **`app/Modules`**.
+    
+    ### **Paso 2: Crear un Controlador en el Módulo**
+    
+    1. **Crear un Controlador con Artisan**:
+    
+    ```bash
+    bashCopy code
+    php artisan make:controller Blog/PostController
+    
+    ```
+    
+    Esto generará un controlador llamado **`PostController`** dentro del módulo **`Blog`**.
+    
+    1. **Editar el Controlador**:
+    
+    ```php
+    phpCopy code
+    <?php
+    
+    namespace App\Modules\Blog\Controllers;
+    
+    use App\Http\Controllers\Controller;
+    
+    class PostController extends Controller
+    {
+        public function index()
+        {
+            return view('blog.posts.index');
+        }
+    
+        public function show($id)
+        {
+            return view('blog.posts.show', ['id' => $id]);
+        }
+    }
+    
+    ```
+    
+    ### **Paso 3: Definir las Rutas**
+    
+    1. **Definir las Rutas en el Archivo de Rutas del Módulo (`routes.php`)**:
+    
+    ```php
+    phpCopy code
+    use App\Modules\Blog\Controllers\PostController;
+    
+    Route::get('/blog/posts', [PostController::class, 'index']);
+    Route::get('/blog/posts/{id}', [PostController::class, 'show']);
+    
+    ```
+    
+    ### **Paso 4: Crear Vistas**
+    
+    1. **Crear las Vistas**:
+    
+    Dentro de la carpeta **`resources/views`**, crea una carpeta **`blog`** y dentro de ella, crea las vistas **`index.blade.php`** y **`show.blade.php`**.
+    
+    1. **Contenido de las Vistas**:
+    - **`index.blade.php`**:
+    
+    ```html
+    htmlCopy code
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Blog Posts</title>
+    </head>
+    <body>
+        <h1>Blog Posts</h1>
+        <!-- Listado de posts -->
+    </body>
+    </html>
+    
+    ```
+    
+    - **`show.blade.php`**:
+    
+    ```html
+    htmlCopy code
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Post Details</title>
+    </head>
+    <body>
+        <h1>Post Details</h1>
+        <p>Post ID: {{ $id }}</p>
+        <!-- Detalles del post con ID específico -->
+    </body>
+    </html>
+    
+    ```
+    
+    ### **Paso 5: Acceder a las Vistas**
+    
+    Ahora puedes acceder a las vistas desde tu navegador visitando las rutas definidas en el módulo **`Blog`**, como **`/blog/posts`** para ver todos los posts y **`/blog/posts/{id}`** para ver un post específico.
+    
+    Con estos pasos, has creado un módulo **`Blog`** con un controlador **`PostController`** que maneja las rutas **`/blog/posts`** y **`/blog/posts/{id}`**, y has vinculado estas rutas con las vistas correspondientes.
+    
     ## **Documentación de la Aplicación de Almacenamiento de Contactos**
     
     ### **Estructura del Proyecto**
@@ -1307,6 +1473,66 @@ En resumen, este seeder crea un usuario de prueba y otros 5 usuarios con contact
 ## API Tokens
 
 Los servidores se autentican usualmente con tokens, a diferencia de las metodologias usuales en frontend como contrasenas y usuarios. Teniendo esto en cuenta: se han agregado API tokens a la aplicación Laravel. Esta característica permite autenticar usuarios y aplicaciones de terceros mediante tokens de API, lo que facilita la integración con servicios externos o el desarrollo de aplicaciones cliente.
+
+## Unit testing y feature testing
+
+### **Unit Tests**
+
+Los Unit Tests en Laravel se utilizan para probar unidades de código aisladas, como clases, métodos o funciones, sin tener en cuenta su interacción con otras partes del sistema. Aquí tienes algunos detalles clave:
+
+- **Finalidad**: Verificar el correcto funcionamiento de unidades individuales de código, garantizando que cada unidad produzca el resultado esperado.
+- **Características**:
+    - Pruebas rápidas y aisladas.
+    - No se necesita una base de datos real.
+    - Se centran en pequeñas partes del código, como métodos y funciones.
+- **Ejemplo de Código (Extraído del Repositorio Laravel-Lab)**:
+
+```php
+phpCopy code
+public function test_example()
+{
+    $result = 1 + 1;
+    $this->assertEquals(2, $result);
+}
+
+```
+
+### **Feature Tests**
+
+Los Feature Tests en Laravel se utilizan para probar escenarios completos de extremo a extremo, como rutas HTTP, formularios, interacciones de usuario y flujos de trabajo completos. Aquí tienes algunos detalles clave:
+
+- **Finalidad**: Probar el comportamiento completo de una característica o funcionalidad, incluyendo su interacción con otras partes del sistema.
+- **Características**:
+    - Pruebas más lentas y realistas, ya que pueden implicar interacciones con la base de datos y el navegador.
+    - Se centran en simular el comportamiento del usuario y validar la respuesta del sistema.
+- **Ejemplo de Código (Extraído del Repositorio Laravel-Lab)**:
+
+```php
+phpCopy code
+public function test_can_create_contact()
+{
+    $user = User::factory()->create();
+
+    $response = $this->actingAs($user)->post('/contacts', [
+        'name' => 'John Doe',
+        'email' => 'john@example.com',
+        'phone_number' => '123456789',
+    ]);
+
+    $response->assertStatus(302);
+    $this->assertDatabaseHas('contacts', ['email' => 'john@example.com']);
+}
+
+```
+
+### **Comparación y Matices**
+
+- **Granularidad**: Los Unit Tests son más granulares y se centran en partes específicas del código, mientras que los Feature Tests son más amplios y cubren escenarios de extremo a extremo.
+- **Velocidad de Ejecución**: Los Unit Tests son más rápidos, ya que no requieren configuración adicional, mientras que los Feature Tests pueden ser más lentos debido a su naturaleza más compleja y a menudo implican interacciones con la base de datos y el navegador.
+- **Aislamiento**: Los Unit Tests a menudo se ejecutan en un entorno aislado sin interacción con otros componentes, mientras que los Feature Tests pueden requerir la integración con otros componentes del sistema.
+- **Propósito**: Los Unit Tests son útiles para probar la lógica de negocio y las funciones individuales, mientras que los Feature Tests son útiles para probar el comportamiento completo de una característica o funcionalidad desde la perspectiva del usuario.
+
+Ambos tipos de pruebas son importantes en el desarrollo de aplicaciones Laravel y se complementan entre sí para garantizar la calidad y el correcto funcionamiento del software.
 
 ## Estructura de archivos
 
